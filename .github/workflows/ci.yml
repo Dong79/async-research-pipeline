@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest -q
+      # Offline smoke run of the eval + benchmark plumbing (fake LLM/search, no secrets needed)
+      - run: python -m eval.run_eval --limit 3 --out /tmp/eval
+        env: { LLM_PROVIDER: fake, SEARCH_PROVIDER: fake, FAKE_LATENCY_SCALE: "0" }
+      - run: python -m eval.benchmark --limit 2 --out /tmp/eval
+        env: { LLM_PROVIDER: fake, SEARCH_PROVIDER: fake, FAKE_LATENCY_SCALE: "0.05" }

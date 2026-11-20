@@ -13,3 +13,4 @@ eval/results/*
 !eval/results/.gitkeep
 # Commit eval/results/summary.md and latency.md once you have real numbers:
 # git add -f eval/results/summary.md eval/results/latency.md
+.pytest_tmp/

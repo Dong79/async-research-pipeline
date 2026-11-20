@@ -1,0 +1,100 @@
+{"id": "q001", "category": "technology", "topic": "How do retrieval-augmented generation systems reduce LLM hallucinations?"}
+{"id": "q002", "category": "technology", "topic": "What is the current state of quantum error correction?"}
+{"id": "q003", "category": "technology", "topic": "How does WebAssembly compare to containers for server-side workloads?"}
+{"id": "q004", "category": "technology", "topic": "What are the trade-offs between vector databases and traditional search engines?"}
+{"id": "q005", "category": "technology", "topic": "How are small language models being deployed on edge devices?"}
+{"id": "q006", "category": "technology", "topic": "What is the state of RISC-V adoption in data centers?"}
+{"id": "q007", "category": "technology", "topic": "How do mixture-of-experts architectures improve LLM efficiency?"}
+{"id": "q008", "category": "technology", "topic": "What are the main approaches to evaluating AI agents?"}
+{"id": "q009", "category": "technology", "topic": "How has the Rust programming language been adopted in the Linux kernel?"}
+{"id": "q010", "category": "technology", "topic": "What are the security risks of prompt injection in LLM applications?"}
+{"id": "q011", "category": "technology", "topic": "How does speculative decoding speed up LLM inference?"}
+{"id": "q012", "category": "technology", "topic": "What is the current state of 6G research?"}
+{"id": "q013", "category": "technology", "topic": "How are passkeys replacing passwords for consumer authentication?"}
+{"id": "q014", "category": "technology", "topic": "What are the leading approaches to on-device speech recognition?"}
+{"id": "q015", "category": "technology", "topic": "How do content delivery networks handle DDoS mitigation?"}
+{"id": "q016", "category": "technology", "topic": "What is the state of open-source large language models?"}
+{"id": "q017", "category": "technology", "topic": "How are digital twins used in manufacturing?"}
+{"id": "q018", "category": "technology", "topic": "What are the main challenges of scaling Kubernetes clusters?"}
+{"id": "q019", "category": "technology", "topic": "How does the Model Context Protocol work for AI tool integration?"}
+{"id": "q020", "category": "technology", "topic": "What progress has been made on neuromorphic computing chips?"}
+{"id": "q021", "category": "science_health", "topic": "What is known about the long-term effectiveness of GLP-1 drugs for weight loss?"}
+{"id": "q022", "category": "science_health", "topic": "How do mRNA vaccines work and what new applications are being studied?"}
+{"id": "q023", "category": "science_health", "topic": "What are the latest findings on the gut microbiome and mental health?"}
+{"id": "q024", "category": "science_health", "topic": "How is CRISPR being used in approved medical therapies?"}
+{"id": "q025", "category": "science_health", "topic": "What is the current evidence on microplastics in human tissue?"}
+{"id": "q026", "category": "science_health", "topic": "How effective are wearable devices at detecting atrial fibrillation?"}
+{"id": "q027", "category": "science_health", "topic": "What are the main causes of antibiotic resistance and how is it being addressed?"}
+{"id": "q028", "category": "science_health", "topic": "How is AI being used in medical imaging diagnosis?"}
+{"id": "q029", "category": "science_health", "topic": "What is the scientific consensus on intermittent fasting?"}
+{"id": "q030", "category": "science_health", "topic": "How do researchers detect exoplanet atmospheres?"}
+{"id": "q031", "category": "science_health", "topic": "What is the current status of nuclear fusion energy research?"}
+{"id": "q032", "category": "science_health", "topic": "What causes coral reef bleaching and can reefs recover?"}
+{"id": "q033", "category": "science_health", "topic": "How are lab-grown organoids used in drug testing?"}
+{"id": "q034", "category": "science_health", "topic": "What do we know about the health effects of long COVID?"}
+{"id": "q035", "category": "science_health", "topic": "How does sleep deprivation affect cognitive performance?"}
+{"id": "q036", "category": "science_health", "topic": "What is the state of Alzheimer's disease drug development?"}
+{"id": "q037", "category": "science_health", "topic": "How are gene therapies priced and reimbursed?"}
+{"id": "q038", "category": "science_health", "topic": "What are the risks and benefits of daily low-dose aspirin?"}
+{"id": "q039", "category": "science_health", "topic": "How is the James Webb Space Telescope changing our understanding of early galaxies?"}
+{"id": "q040", "category": "science_health", "topic": "What is the current understanding of dark matter candidates?"}
+{"id": "q041", "category": "climate_energy", "topic": "How are small modular nuclear reactors being deployed?"}
+{"id": "q042", "category": "climate_energy", "topic": "What is the cost trajectory of lithium-ion battery packs?"}
+{"id": "q043", "category": "climate_energy", "topic": "How do sodium-ion batteries compare to lithium-ion batteries?"}
+{"id": "q044", "category": "climate_energy", "topic": "What are the main barriers to green hydrogen adoption?"}
+{"id": "q045", "category": "climate_energy", "topic": "How effective is direct air capture of carbon dioxide?"}
+{"id": "q046", "category": "climate_energy", "topic": "How are heat pumps being adopted in cold climates?"}
+{"id": "q047", "category": "climate_energy", "topic": "What is the state of offshore wind development in the United States?"}
+{"id": "q048", "category": "climate_energy", "topic": "How do carbon credit markets work and what are their criticisms?"}
+{"id": "q049", "category": "climate_energy", "topic": "What role does geothermal energy play in decarbonization?"}
+{"id": "q050", "category": "climate_energy", "topic": "How is grid-scale energy storage being deployed?"}
+{"id": "q051", "category": "climate_energy", "topic": "What are the environmental impacts of lithium mining?"}
+{"id": "q052", "category": "climate_energy", "topic": "How do perovskite solar cells compare to silicon solar cells?"}
+{"id": "q053", "category": "climate_energy", "topic": "What are the challenges of electrifying heavy-duty trucking?"}
+{"id": "q054", "category": "climate_energy", "topic": "How is climate change affecting global crop yields?"}
+{"id": "q055", "category": "climate_energy", "topic": "What is the state of sustainable aviation fuel production?"}
+{"id": "q056", "category": "climate_energy", "topic": "How do cities use urban heat island mitigation strategies?"}
+{"id": "q057", "category": "climate_energy", "topic": "What are the trends in global electric vehicle sales?"}
+{"id": "q058", "category": "climate_energy", "topic": "How is methane leakage from oil and gas measured?"}
+{"id": "q059", "category": "climate_energy", "topic": "What is regenerative agriculture and what evidence supports it?"}
+{"id": "q060", "category": "climate_energy", "topic": "How are countries approaching coal power phase-outs?"}
+{"id": "q061", "category": "economics_policy", "topic": "How does the EU AI Act regulate high-risk AI systems?"}
+{"id": "q062", "category": "economics_policy", "topic": "What are the economic effects of remote work on city centers?"}
+{"id": "q063", "category": "economics_policy", "topic": "How do central bank digital currencies work and which countries are piloting them?"}
+{"id": "q064", "category": "economics_policy", "topic": "What is the evidence on universal basic income experiments?"}
+{"id": "q065", "category": "economics_policy", "topic": "How are semiconductor export controls affecting the chip industry?"}
+{"id": "q066", "category": "economics_policy", "topic": "What are the main arguments for and against a four-day work week?"}
+{"id": "q067", "category": "economics_policy", "topic": "How do minimum wage increases affect employment according to research?"}
+{"id": "q068", "category": "economics_policy", "topic": "How is generative AI expected to affect labor markets?"}
+{"id": "q069", "category": "economics_policy", "topic": "What is the state of global supply chain reshoring?"}
+{"id": "q070", "category": "economics_policy", "topic": "How do carbon border adjustment mechanisms work?"}
+{"id": "q071", "category": "economics_policy", "topic": "What are the economic impacts of population aging in Japan?"}
+{"id": "q072", "category": "economics_policy", "topic": "How does the gig economy affect worker benefits and protections?"}
+{"id": "q073", "category": "economics_policy", "topic": "What is the current state of stablecoin regulation?"}
+{"id": "q074", "category": "economics_policy", "topic": "How do housing supply constraints affect affordability?"}
+{"id": "q075", "category": "economics_policy", "topic": "What are the effects of tariffs on consumer prices?"}
+{"id": "q076", "category": "economics_policy", "topic": "How are governments regulating data privacy for children online?"}
+{"id": "q077", "category": "economics_policy", "topic": "What is the evidence on the effectiveness of congestion pricing?"}
+{"id": "q078", "category": "economics_policy", "topic": "How do antitrust authorities approach big tech acquisitions?"}
+{"id": "q079", "category": "economics_policy", "topic": "What are the economic effects of student loan forgiveness?"}
+{"id": "q080", "category": "economics_policy", "topic": "How is open banking changing financial services?"}
+{"id": "q081", "category": "society_business", "topic": "How are companies measuring the ROI of generative AI deployments?"}
+{"id": "q082", "category": "society_business", "topic": "What are effective strategies for reducing customer churn in SaaS?"}
+{"id": "q083", "category": "society_business", "topic": "How has the streaming industry changed its business model recently?"}
+{"id": "q084", "category": "society_business", "topic": "What does research say about the effects of social media on teenagers?"}
+{"id": "q085", "category": "society_business", "topic": "How are universities responding to AI use by students?"}
+{"id": "q086", "category": "society_business", "topic": "What are best practices for open-source project governance?"}
+{"id": "q087", "category": "society_business", "topic": "How do loyalty programs influence consumer behavior?"}
+{"id": "q088", "category": "society_business", "topic": "What is the state of the global semiconductor foundry market?"}
+{"id": "q089", "category": "society_business", "topic": "How are newsrooms using AI in journalism?"}
+{"id": "q090", "category": "society_business", "topic": "What factors drive startup success according to research?"}
+{"id": "q091", "category": "society_business", "topic": "How is esports growing as an industry?"}
+{"id": "q092", "category": "society_business", "topic": "What are the trends in plant-based meat sales?"}
+{"id": "q093", "category": "society_business", "topic": "How do companies approach responsible AI governance?"}
+{"id": "q094", "category": "society_business", "topic": "What is the evidence on the effectiveness of online learning?"}
+{"id": "q095", "category": "society_business", "topic": "How are cities adopting autonomous vehicle ride-hailing services?"}
+{"id": "q096", "category": "society_business", "topic": "What are the main trends in cybersecurity ransomware attacks?"}
+{"id": "q097", "category": "society_business", "topic": "How do recommendation algorithms affect music discovery?"}
+{"id": "q098", "category": "society_business", "topic": "What is the impact of AI coding assistants on developer productivity?"}
+{"id": "q099", "category": "society_business", "topic": "How are retailers using computer vision in stores?"}
+{"id": "q100", "category": "society_business", "topic": "What are the challenges of content moderation at scale?"}

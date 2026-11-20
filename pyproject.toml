@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "research-pipeline"
 version = "0.1.0"
 description = "Async multi-agent deep-research pipeline: DAG execution, SSE streaming, checkpointing, and an LLM-as-a-Judge grounding eval."
-
+readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = [
@@ -14,15 +14,16 @@ dependencies = [
     "uvicorn[standard]>=0.27",
     "httpx>=0.27",
     "pydantic>=2.5",
+    "ddgs>=9.0",                     # free web search (SEARCH_PROVIDER=duckduckgo)
 ]
 
 [project.optional-dependencies]
 tokens = ["tiktoken>=0.6"]          # exact token counts (falls back to a heuristic without it)
-ddg = ["ddgs>=9.0"]                  # free DuckDuckGo search backend
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]
 research-server = "research_pipeline.api:main"
+research-run = "research_pipeline.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/research_pipeline"]
@@ -30,6 +31,8 @@ packages = ["src/research_pipeline"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "."]
+# Keep pytest temp files inside the repo: avoids Windows permission errors in %TEMP%
+addopts = "--basetemp=.pytest_tmp"
 
 [tool.ruff]
 line-length = 100
