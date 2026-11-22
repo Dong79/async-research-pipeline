@@ -87,15 +87,21 @@ order shuffled per query.
 
 ### Results
 
-> Fill these in from `eval/results/summary.md` and `eval/results/latency.md` after running
-> against real providers. Numbers from `LLM_PROVIDER=fake` only test the plumbing.
+Measured with real providers. Raw outputs: [`eval/results/summary.md`](eval/results/summary.md),
+[`eval/results/latency.md`](eval/results/latency.md).
 
 | | value |
 |---|---|
-| Models | LLM: `…` · judge: `…` · search: `…` |
-| End-to-end latency, sequential → DAG + pruning (mean, n=…) | …s → …s (−…%) |
-| Unsupported-claim rate, baseline → grounded (n=… queries, … claims) | …% → …% (−…% relative, 95% CI …) |
-| Judge–human agreement (n=… claims) | κ = … |
+| Models | LLM and judge: `deepseek-chat` · search: DuckDuckGo + full-page fetch |
+| End-to-end latency, sequential → parallel DAG (n=10) | mean 70.3 s → 38.8 s (−44.8%); median 44.5 s → 23.2 s |
+| Unsupported-claim rate, baseline → grounded (n=30 queries, 1,247 / 1,186 claims) | 22.1% → 4.1% (−80.3% relative, 95% CI 64.9–90.1%) |
+| Uncited factual claims per report | 8.87 → 0.53 |
+| Citation precision (cited claims fully supported) | 87.0% → 93.0% |
+
+Notes: context pruning gave no measurable latency gain (DAG + pruning: −42.3%, within noise)
+because generation time is dominated by output tokens; its benefit shows up in grounding.
+The judge is the same model as the generator, a known limitation; a different judge model
+is the next validation step.
 
 ## Project layout
 
