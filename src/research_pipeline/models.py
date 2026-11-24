@@ -41,6 +41,8 @@ class ReportResult(BaseModel):
     tasks: list[TaskResult]
     citation_stats: dict[str, int] = Field(default_factory=dict)
     metrics: dict[str, float] = Field(default_factory=dict)
+    # One span per executed node: {node, stage, queued, start, end, status}, seconds from run start
+    timeline: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class RunStatus(StrEnum):

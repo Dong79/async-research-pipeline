@@ -50,6 +50,9 @@ class ResearchPipeline:
         self.researcher = ResearcherAgent(llm, settings)
         self.writer = WriterAgent(llm, settings)
         self.timings: dict[str, Any] = {}
+        self._t0 = 0.0
+        self._spans: dict[str, dict[str, Any]] = {}
+        self._executor: DAGExecutor | None = None
 
     async def run(self, topic: str) -> ReportResult:
         token = set_sink(self.sink)
@@ -59,7 +62,8 @@ class ResearchPipeline:
             reset_sink(token)
 
     async def _run(self, topic: str) -> ReportResult:
-        t0 = time.perf_counter()
+        t0 = self._t0 = time.perf_counter()
+        self._spans = {}
         await emit(
             "run_started",
             {
@@ -71,11 +75,15 @@ class ResearchPipeline:
         tasks = self.ckpt.plan
         if tasks is None:
             await emit("stage", {"stage": "planning"})
+            await self._span_start("plan")
             tasks = await self.planner.plan(topic)
+            await self._span_end("plan")
             await self.ckpt.save_plan(tasks)
         await emit("plan", {"tasks": [t.model_dump() for t in tasks]})
 
-        executor = DAGExecutor(self.s.max_concurrency, on_event=self._on_node_event)
+        executor = self._executor = DAGExecutor(
+            self.s.max_concurrency, on_event=self._on_node_event
+        )
         results = await executor.run(
             self.build_dag(topic, tasks), precomputed=self.ckpt.precomputed()
         )
@@ -83,6 +91,7 @@ class ResearchPipeline:
 
         report: ReportResult = results["write"]
         report.metrics["elapsed_seconds"] = round(time.perf_counter() - t0, 3)
+        report.timeline = list(self._spans.values())
         await emit(
             "report",
             {
@@ -90,6 +99,7 @@ class ResearchPipeline:
                 "sources": [s.model_dump(exclude={"content"}) for s in report.sources],
                 "citation_stats": report.citation_stats,
                 "metrics": report.metrics,
+                "timeline": report.timeline,
             },
         )
         return report
@@ -242,8 +252,42 @@ class ResearchPipeline:
 
     # ------------------------------------------------------------------------- events
 
+    # ------------------------------------------------------------------------- timeline
+
+    def _now(self) -> float:
+        return round(time.perf_counter() - self._t0, 3)
+
+    async def _span_start(self, node: str, queued: float | None = None) -> None:
+        """Record that a node began running. ``queued`` = when it became ready; the gap
+        between queued and start is time spent waiting for a concurrency slot."""
+        now = self._now()
+        span = {
+            "node": node,
+            "stage": node.partition(":")[0],
+            "queued": now if queued is None else min(queued, now),
+            "start": now,
+            "end": None,
+            "status": "running",
+        }
+        self._spans[node] = span
+        await emit("span", dict(span))
+
+    async def _span_end(self, node: str, status: str = "done") -> None:
+        span = self._spans.get(node)
+        if span is None:
+            return
+        span["end"] = self._now()
+        span["status"] = status
+        await emit("span", dict(span))
+
     async def _on_node_event(self, kind: str, data: dict[str, Any]) -> None:
         node: str = data["node"]
+        if kind == "node_started":
+            timing = self._executor.timings.get(node) if self._executor else None
+            queued = round(timing.queued_at - self._t0, 3) if timing else None
+            await self._span_start(node, queued)
+        elif kind in ("node_completed", "node_failed"):
+            await self._span_end(node, "done" if kind == "node_completed" else "failed")
         stage, _, task_id = node.partition(":")
         if kind == "node_completed":
             await self.ckpt.save_node(node, data["result"])

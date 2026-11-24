@@ -8,10 +8,12 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 <style>
   :root { --bg:#f7f6f3; --panel:#fff; --ink:#1d1d1b; --muted:#6b6a66; --line:#e4e2dc;
-          --accent:#2f5d50; --warn:#a15c07; --bad:#a23b3b; }
+          --accent:#2f5d50; --warn:#a15c07; --bad:#a23b3b;
+          --c-plan:#7c8591; --c-search:#3b7dd8; --c-summarize:#2e9e6a; --c-write:#e07b28; }
   @media (prefers-color-scheme: dark) {
     :root { --bg:#151514; --panel:#1e1e1c; --ink:#ecebe7; --muted:#9a9892; --line:#2e2d2a;
-            --accent:#7fb8a6; --warn:#e0a458; --bad:#e07a7a; } }
+            --accent:#7fb8a6; --warn:#e0a458; --bad:#e07a7a;
+            --c-plan:#9aa3ad; --c-search:#6ea4ee; --c-summarize:#5cc493; --c-write:#f0a060; } }
   * { box-sizing:border-box }
   body { margin:0; font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
          background:var(--bg); color:var(--ink) }
@@ -36,10 +38,16 @@
   #log { font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--muted);
          max-height:240px; overflow:auto; white-space:pre-wrap; margin:0 }
   #report { min-height:300px } #report.streaming { white-space:pre-wrap; font-size:14px }
-  #report h1 { font-size:22px } #report h2 { font-size:17px; margin-top:22px }
+  #report h1 { font-size:22px }
+  #report h2 { font-size:17px; margin-top:22px; text-transform:none; letter-spacing:0; color:var(--ink) }
   #report a { color:var(--accent) }
   .stats { color:var(--muted); font-size:12px; margin-bottom:8px }
   .stack > * + * { margin-top:16px }
+  #timeline svg { display:block; width:100%; height:auto }
+  #timeline .lbl { font-size:11px; fill:var(--ink) } #timeline .dim { font-size:10px; fill:var(--muted) }
+  #timeline .grid { stroke:var(--line) }
+  .legend { display:flex; flex-wrap:wrap; gap:4px 14px; font-size:11px; color:var(--muted); margin-top:6px }
+  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px }
 </style>
 </head>
 <body>
@@ -56,12 +64,72 @@
     <section class="panel"><h2>Plan</h2><div id="tasks"><span class="q">No run yet.</span></div></section>
     <section class="panel"><h2>Event log</h2><pre id="log"></pre></section>
   </div>
-  <section class="panel"><h2>Report</h2><div class="stats" id="stats"></div><div id="report"></div></section>
+  <div class="stack">
+    <section class="panel"><h2>Execution timeline</h2>
+      <div id="timeline"><span class="q" style="color:var(--muted);font-size:13px">Bars appear as DAG nodes run.</span></div>
+      <div class="legend"><span><i style="background:var(--c-plan)"></i>plan</span><span><i style="background:var(--c-search)"></i>search</span>
+        <span><i style="background:var(--c-summarize)"></i>summarize</span><span><i style="background:var(--c-write)"></i>write</span>
+        <span><i style="background:var(--c-search);opacity:.25"></i>ready, waiting for a slot</span></div></section>
+    <section class="panel"><h2>Report</h2><div class="stats" id="stats"></div><div id="report"></div></section>
+  </div>
 </main>
 <script>
 const $ = (id) => document.getElementById(id);
 const md = (s) => DOMPurify.sanitize(marked.parse(s));   // web content is untrusted: sanitize
 let es = null, streamed = "";
+
+// ---- execution timeline: live Gantt chart of DAG nodes --------------------------------
+// Bars of running nodes grow in real time; the pale part before a bar is time the node
+// was ready but waiting for a concurrency slot.
+let tl = { spans: {}, clientStart: null, timer: null, done: false };
+function resetTimeline() { clearInterval(tl.timer); tl = { spans: {}, clientStart: null, timer: null, done: false }; }
+function tlKey(s) {
+  const [stage, id] = s.node.split(":");
+  if (stage === "plan") return [0, 0, 0];
+  if (stage === "write") return [2, 0, 0];
+  return [1, parseInt((id || "t999").slice(1)) || 999, stage === "search" ? 0 : 1];
+}
+function onSpan(s) {
+  if (tl.clientStart === null) tl.clientStart = performance.now() - (s.end ?? s.start) * 1000;
+  tl.spans[s.node] = s;
+  if (!tl.timer && !tl.done) tl.timer = setInterval(drawTimeline, 150);
+  drawTimeline();
+}
+function stopTimeline(final) {
+  if (final) { tl.spans = {}; final.forEach(s => { tl.spans[s.node] = s; }); }
+  tl.done = true; clearInterval(tl.timer); tl.timer = null; drawTimeline();
+}
+function drawTimeline() {
+  const spans = Object.values(tl.spans).sort((a, b) => {
+    const ka = tlKey(a), kb = tlKey(b);
+    return ka[0] - kb[0] || ka[1] - kb[1] || ka[2] - kb[2];
+  });
+  if (!spans.length) return;
+  const now = tl.clientStart === null ? 0 : (performance.now() - tl.clientStart) / 1000;
+  const endOf = s => s.end ?? (tl.done ? s.start : Math.max(now, s.start));
+  const total = Math.max(1, ...spans.map(endOf));
+  const steps = [0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 300];
+  const step = steps.find(v => total / v <= 6) || 600;
+  const axis = Math.ceil(total / step) * step;
+  const W = 640, left = 92, right = 44, pitch = 20, barH = 12, plot = W - left - right;
+  const H = spans.length * pitch + 22, X = t => left + t / axis * plot;
+  let out = "";
+  for (let t = 0; t <= axis + 1e-9; t += step)
+    out += `<line class="grid" x1="${X(t)}" y1="0" x2="${X(t)}" y2="${H - 18}"/>` +
+           `<text class="dim" x="${X(t)}" y="${H - 4}" text-anchor="middle">${+t.toFixed(1)}s</text>`;
+  spans.forEach((s, i) => {
+    const y = i * pitch + (pitch - barH) / 2, color = `var(--c-${s.stage})`, end = endOf(s);
+    const running = s.end == null && !tl.done;
+    out += `<text class="lbl" x="${left - 8}" y="${y + barH - 2}" text-anchor="end">${esc(s.node)}</text>`;
+    if (s.start - s.queued > 0.02)
+      out += `<rect x="${X(s.queued)}" y="${y}" width="${X(s.start) - X(s.queued)}" height="${barH}" rx="3" fill="${color}" opacity=".22"/>`;
+    const w = Math.max(X(end) - X(s.start), 1.5);
+    out += `<rect x="${X(s.start)}" y="${y}" width="${w}" height="${barH}" rx="3" fill="${color}"` +
+           ` opacity="${s.status === "failed" ? .4 : 1}"${running ? ' class="running"' : ""}/>` +
+           `<text class="dim" x="${X(s.start) + w + 4}" y="${y + barH - 2}">${(end - s.start).toFixed(1)}s${running ? "…" : ""}</text>`;
+  });
+  $("timeline").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Execution timeline of pipeline nodes">${out}</svg>`;
+}
 
 function logLine(text) { const l = $("log"); l.textContent += text + "\n"; l.scrollTop = l.scrollHeight; }
 function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
@@ -81,16 +149,18 @@ const handlers = {
   pages_fetched: (d) => logLine(`  fetched ${d.fetched}/${d.total} pages: ${d.query}`),
   retry: (d) => logLine(`retry ${d.where} #${d.attempt} in ${d.delay}s (${d.error})`),
   stage: (d) => logLine(`stage: ${d.stage}`),
+  span: (s) => onSpan(s),
   report_delta: ({ text }) => { streamed += text; $("report").className = "streaming"; $("report").textContent = streamed; },
   report: (d) => {
     $("report").className = ""; $("report").innerHTML = md(d.markdown);
+    stopTimeline(d.timeline);
     const c = d.citation_stats || {};
     $("stats").textContent = `${d.metrics.elapsed_seconds}s · ${d.sources.length} sources · ` +
       `${c.cited_claims ?? 0} cited / ${c.uncited_claims ?? 0} uncited claims · ${c.invalid_citations_removed ?? 0} invalid citations removed`;
   },
   resumed: () => logLine("resumed from checkpoint"),
-  done: () => { logLine("done"); finish(); },
-  error: (d) => { logLine(`ERROR: ${d.message}`); finish(); },
+  done: () => { logLine("done"); stopTimeline(); finish(); },
+  error: (d) => { logLine(`ERROR: ${d.message}`); stopTimeline(); finish(); },
 };
 
 function finish() { if (es) { es.close(); es = null; } $("go").disabled = false; }
@@ -107,6 +177,7 @@ function watch(runId) {
 $("f").addEventListener("submit", async (e) => {
   e.preventDefault();
   $("go").disabled = true; streamed = ""; $("report").innerHTML = ""; $("stats").textContent = ""; $("log").textContent = "";
+  resetTimeline(); $("timeline").innerHTML = "";
   const r = await fetch("/api/runs", { method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ topic: $("topic").value, grounded: $("grounded").checked }) });
   if (!r.ok) { logLine(`HTTP ${r.status}: ${await r.text()}`); $("go").disabled = false; return; }
