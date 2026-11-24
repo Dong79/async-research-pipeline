@@ -1,23 +1,39 @@
 # Async Agentic Research & Evaluation Pipeline
 
+[![CI](https://github.com/Dong79/async-research-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/Dong79/async-research-pipeline/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 A multi-agent "deep research" service: give it a topic, it plans sub-questions, searches and
 summarizes them **in parallel** as an async DAG, streams progress and the report over
 **Server-Sent Events**, checkpoints every step so interrupted runs resume, and ships with an
 **LLM-as-a-Judge harness** that audits whether each claim in the report is actually supported
 by the source it cites.
 
+**Measured results** (real LLM and web search; details in [Results](#results)):
+
+- **−45% end-to-end latency** from parallel DAG execution vs. sequential (mean 70.3 s → 38.8 s, n=10)
+- **Unsupported claims 22.1% → 4.1%** (−80% relative, 95% CI 65–90%, n=30 queries, ~2,400 judged claims)
+- **Uncited factual claims per report 8.9 → 0.5**; citation precision 87% → 93%
+
 Inspired by the TODO-driven research agent in [hello-agents ch.14](https://github.com/datawhalechina/hello-agents/blob/main/docs/chapter14/%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0%20%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B7%B1%E5%BA%A6%E7%A0%94%E7%A9%B6%E6%99%BA%E8%83%BD%E4%BD%93.md),
 re-designed around concurrency, resilience and measurable grounding. No agent framework —
-just `asyncio`, FastAPI, httpx and Pydantic, so every mechanism is visible in ~2.5k lines.
+just `asyncio`, FastAPI, httpx and Pydantic, so every mechanism is visible in ~3k lines.
 
+```mermaid
+flowchart LR
+    T([Topic]) --> P[Planner]
+    P --> S1[search t1] --> M1[summarize t1]
+    P --> S2[search t2] --> M2[summarize t2]
+    P --> S3[search t3] --> M3[summarize t3]
+    M1 & M2 & M3 --> W[Writer + citation validation]
+    W --> R([Cited report])
+    W -. events .-> E[(Append-only event log)]
+    E -. "SSE (Last-Event-ID replay)" .-> B[Browser / CLI]
 ```
-                 ┌─ search:t1 ─▶ summarize:t1 ─┐
- topic ─▶ plan ──┼─ search:t2 ─▶ summarize:t2 ─┼─▶ write ─▶ validated report + references
-                 └─ search:t3 ─▶ summarize:t3 ─┘
-                     (≤ K nodes in flight, retries w/ backoff, token budgets, checkpoint per node)
-                                       │
-                       events ─▶ append-only log ─▶ SSE (Last-Event-ID replay, heartbeats)
-```
+
+Each node starts as soon as its own dependencies finish, with at most K nodes in flight,
+retries with backoff, token budgets, and a checkpoint after every node.
 
 ## Features
 
@@ -30,7 +46,8 @@ just `asyncio`, FastAPI, httpx and Pydantic, so every mechanism is visible in ~2
 | Grounding | Local→global citation remapping across sub-tasks, strict citation prompts, post-hoc validation of citation ids, canonical reference list | `citations.py`, `prompts.py` |
 | Streaming | Background run + append-only event log → many SSE subscribers, reconnect with `Last-Event-ID`, heartbeats, token streaming of the report | `runs.py`, `api.py` |
 | Checkpointing | Atomic per-node state writes; resume after crash/restart re-runs only unfinished nodes | `checkpoint.py` |
-| Evaluation | 100-query benchmark, claim-level LLM judge, baseline vs grounded A/B with paired bootstrap CI, human-agreement (Cohen's κ) tooling, latency ablation | `judge.py`, `eval/` |
+| Evaluation | 100-query benchmark set (results on a stratified 30-query sample), claim-level LLM judge, baseline vs grounded A/B with paired bootstrap CI, human-agreement (Cohen's κ) tooling, latency ablation | `judge.py`, `eval/` |
+| Observability | Per-node execution spans (queued / start / end): live Gantt chart in the web UI, text timeline in the CLI, SVG export | `timeline.py`, `static/index.html` |
 | Offline mode | Deterministic fake LLM + search with realistic latency and injectable 429s — tests and CI need no keys | `llm.py`, `search.py` |
 
 ## Quick start
@@ -52,6 +69,25 @@ research-server                      # web UI on http://localhost:8000
 Any OpenAI-compatible provider works (OpenAI, DeepSeek, Qwen, OpenRouter, Ollama...): set
 `LLM_BASE_URL` and `LLM_MODEL` in `.env`. Use a non-reasoning chat model.
 
+## Execution timeline
+
+![Sequential vs parallel DAG timeline](docs/timeline.svg)
+
+Every run records when each node became ready, started and finished. Overlapping bars ran
+concurrently; the pale segment before a bar is time spent **ready but waiting for a
+concurrency slot**. The write step can only start after the last summary, so its length bounds
+the possible speed-up (Amdahl's law), which is why the measured gain is ~45% rather than ~75%.
+
+The chart above comes from an offline simulation. To draw it from a real run (two reports'
+worth of API calls):
+
+```bash
+python -m eval.timeline "How well do heat pumps work in cold climates?"   # writes docs/timeline.svg
+research-run "..." --timeline-svg timeline.svg                           # timeline of a single run
+```
+
+The web UI draws the same chart live while a run executes.
+
 ### API
 
 ```bash
@@ -64,13 +100,14 @@ curl -N -H 'Last-Event-ID: 42' localhost:8000/api/runs/3f2c.../events # replay f
 curl -X POST localhost:8000/api/runs/3f2c.../resume                    # resume failed/interrupted run
 ```
 
-Event types: `run_started, stage, plan, task_status, context_pruned, retry, task_summary,
-writer_context, report_delta, report, done | error`.
+Event types: `run_started, stage, plan, span, task_status, pages_fetched, context_pruned, retry,
+task_summary, writer_context, report_delta, report, done | error`.
 
 ## Evaluation
 
 ```bash
-make eval    # python -m eval.run_eval --limit 100     (baseline vs grounded, judged per claim)
+python -m eval.run_eval --queries eval/queries_30.jsonl   # reported results: 30 queries, 6 per domain avg.
+make eval    # python -m eval.run_eval --limit 100     (full set: baseline vs grounded, judged per claim)
 make bench   # python -m eval.benchmark --limit 10      (sequential vs DAG vs DAG+pruning)
 python -m eval.run_eval --export-sample 60              # blind CSV for human labels
 python -m eval.agreement eval/results/human_label_sample.csv
@@ -122,10 +159,12 @@ src/research_pipeline/
   retry.py        backoff policy
   checkpoint.py   atomic per-node persistence
   judge.py        LLM-as-a-Judge grounding scorer
-eval/             queries.jsonl (100), run_eval.py, benchmark.py, agreement.py
-tests/            40 offline tests (DAG, retry, budgets, citations, pipeline, SSE, resume,
-                  real LLM/search clients against mocked HTTP servers)
-docs/ARCHITECTURE.md
+  timeline.py     execution timeline: text Gantt + SVG renderer
+eval/             queries.jsonl (100), queries_30.jsonl (reported sample), run_eval.py,
+                  benchmark.py, timeline.py, agreement.py
+tests/            43 offline tests (DAG, retry, budgets, citations, pipeline, SSE, resume,
+                  timeline, real LLM/search clients against mocked HTTP servers)
+docs/             ARCHITECTURE.md, timeline.svg
 ```
 
 ## Limitations / next steps
@@ -135,6 +174,7 @@ docs/ARCHITECTURE.md
 - Claim splitting is sentence-based; an LLM claim-decomposition step would catch compound claims.
 - No reflection loop yet (identify knowledge gaps → spawn follow-up searches); the DAG would
   need dynamic node insertion.
-- The judge is itself an LLM — check its agreement with human labels before trusting deltas.
+- The judge is the same model as the generator; validating with a different judge model and
+  human labels (`eval/agreement.py`) is the next step.
 
 MIT licensed.

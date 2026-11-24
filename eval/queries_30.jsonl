@@ -1,0 +1,30 @@
+{"id": "q001", "category": "technology", "topic": "How do retrieval-augmented generation systems reduce LLM hallucinations?"}
+{"id": "q002", "category": "technology", "topic": "What is the current state of quantum error correction?"}
+{"id": "q003", "category": "technology", "topic": "How does WebAssembly compare to containers for server-side workloads?"}
+{"id": "q004", "category": "technology", "topic": "What are the trade-offs between vector databases and traditional search engines?"}
+{"id": "q005", "category": "technology", "topic": "How are small language models being deployed on edge devices?"}
+{"id": "q006", "category": "technology", "topic": "What is the state of RISC-V adoption in data centers?"}
+{"id": "q007", "category": "technology", "topic": "How do mixture-of-experts architectures improve LLM efficiency?"}
+{"id": "q008", "category": "technology", "topic": "What are the main approaches to evaluating AI agents?"}
+{"id": "q009", "category": "technology", "topic": "How has the Rust programming language been adopted in the Linux kernel?"}
+{"id": "q010", "category": "technology", "topic": "What are the security risks of prompt injection in LLM applications?"}
+{"id": "q021", "category": "science_health", "topic": "What is known about the long-term effectiveness of GLP-1 drugs for weight loss?"}
+{"id": "q022", "category": "science_health", "topic": "How do mRNA vaccines work and what new applications are being studied?"}
+{"id": "q023", "category": "science_health", "topic": "What are the latest findings on the gut microbiome and mental health?"}
+{"id": "q024", "category": "science_health", "topic": "How is CRISPR being used in approved medical therapies?"}
+{"id": "q025", "category": "science_health", "topic": "What is the current evidence on microplastics in human tissue?"}
+{"id": "q041", "category": "climate_energy", "topic": "How are small modular nuclear reactors being deployed?"}
+{"id": "q042", "category": "climate_energy", "topic": "What is the cost trajectory of lithium-ion battery packs?"}
+{"id": "q043", "category": "climate_energy", "topic": "How do sodium-ion batteries compare to lithium-ion batteries?"}
+{"id": "q044", "category": "climate_energy", "topic": "What are the main barriers to green hydrogen adoption?"}
+{"id": "q045", "category": "climate_energy", "topic": "How effective is direct air capture of carbon dioxide?"}
+{"id": "q061", "category": "economics_policy", "topic": "How does the EU AI Act regulate high-risk AI systems?"}
+{"id": "q062", "category": "economics_policy", "topic": "What are the economic effects of remote work on city centers?"}
+{"id": "q063", "category": "economics_policy", "topic": "How do central bank digital currencies work and which countries are piloting them?"}
+{"id": "q064", "category": "economics_policy", "topic": "What is the evidence on universal basic income experiments?"}
+{"id": "q065", "category": "economics_policy", "topic": "How are semiconductor export controls affecting the chip industry?"}
+{"id": "q081", "category": "society_business", "topic": "How are companies measuring the ROI of generative AI deployments?"}
+{"id": "q082", "category": "society_business", "topic": "What are effective strategies for reducing customer churn in SaaS?"}
+{"id": "q083", "category": "society_business", "topic": "How has the streaming industry changed its business model recently?"}
+{"id": "q084", "category": "society_business", "topic": "What does research say about the effects of social media on teenagers?"}
+{"id": "q085", "category": "society_business", "topic": "How are universities responding to AI use by students?"}

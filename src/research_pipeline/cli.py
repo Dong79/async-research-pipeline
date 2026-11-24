@@ -23,6 +23,7 @@ from .llm import build_llm
 from .pipeline import ResearchPipeline
 from .retry import PermanentError, RetryableError
 from .search import build_search
+from .timeline import render_ascii, render_svg
 
 HINTS = {
     "http 401": "the API key was rejected: check LLM_API_KEY (no quotes or spaces around it).",
@@ -148,7 +149,7 @@ class _Printer:
             sys.stdout.flush()
 
 
-async def run(topic: str, s: Settings, out: Path) -> int:
+async def run(topic: str, s: Settings, out: Path, svg: Path | None = None) -> int:
     llm, search = build_llm(s), build_search(s)
     t0 = time.perf_counter()
     try:
@@ -167,6 +168,13 @@ async def run(topic: str, s: Settings, out: Path) -> int:
         f"  ·  {c.get('cited_claims', 0)} cited / {c.get('uncited_claims', 0)} uncited sentences"
         f"  ·  LLM usage {llm.usage.as_dict()}"
     )
+    print("\n" + render_ascii(report.timeline))
+    if svg is not None:
+        heading = f"{topic[:70]} ({report.metrics['elapsed_seconds']:.1f}s, concurrency {s.max_concurrency})"
+        await asyncio.to_thread(
+            svg.write_text, render_svg([(heading, report.timeline)]), encoding="utf-8"
+        )
+        print(f"Saved timeline to {svg}")
     return 0
 
 
@@ -179,6 +187,9 @@ def main() -> None:
     ap.add_argument("--out", default="report.md", help="where to save the report")
     ap.add_argument("--baseline", action="store_true", help="loose prompts, no pruning")
     ap.add_argument("--concurrency", type=int, help="DAG nodes in flight (1 = sequential)")
+    ap.add_argument(
+        "--timeline-svg", metavar="PATH", help="also save the execution timeline as SVG"
+    )
     args = ap.parse_args()
 
     s = Settings.from_env()
@@ -193,7 +204,8 @@ def main() -> None:
         overrides["max_concurrency"] = args.concurrency
     s = dataclasses.replace(s, **overrides)
     try:
-        sys.exit(asyncio.run(run(args.topic, s, Path(args.out))))
+        svg = Path(args.timeline_svg) if args.timeline_svg else None
+        sys.exit(asyncio.run(run(args.topic, s, Path(args.out), svg)))
     except ValueError as exc:  # e.g. missing API key
         print(f"[FAIL] {exc}")
         sys.exit(1)
