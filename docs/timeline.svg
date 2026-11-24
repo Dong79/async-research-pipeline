@@ -1,0 +1,104 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 880 654' width='880' height='654' font-family='-apple-system,Segoe UI,Helvetica,Arial,sans-serif'>
+  <rect width='100%' height='100%' fill='#ffffff'/>
+  <text x='24' y='28' font-size='17' font-weight='600' fill='#1f2328'>Same topic, sequential vs parallel DAG execution</text>
+  <text x='24' y='50' font-size='12.5' fill='#59636e'>Topic: How well do heat pumps work in cold climates? | offline simulation, not a measurement</text>
+  <text x='24' y='86' font-size='14' font-weight='600' fill='#1f2328'>Sequential (max_concurrency=1): 19.4s</text>
+  <line x1='132.0' y1='98' x2='132.0' y2='318' stroke='#d8dee4'/>
+  <text x='132.0' y='332' font-size='11' fill='#59636e' text-anchor='middle'>0s</text>
+  <line x1='303.0' y1='98' x2='303.0' y2='318' stroke='#d8dee4'/>
+  <text x='303.0' y='332' font-size='11' fill='#59636e' text-anchor='middle'>5s</text>
+  <line x1='474.0' y1='98' x2='474.0' y2='318' stroke='#d8dee4'/>
+  <text x='474.0' y='332' font-size='11' fill='#59636e' text-anchor='middle'>10s</text>
+  <line x1='645.0' y1='98' x2='645.0' y2='318' stroke='#d8dee4'/>
+  <text x='645.0' y='332' font-size='11' fill='#59636e' text-anchor='middle'>15s</text>
+  <line x1='816.0' y1='98' x2='816.0' y2='318' stroke='#d8dee4'/>
+  <text x='816.0' y='332' font-size='11' fill='#59636e' text-anchor='middle'>20s</text>
+  <text x='122' y='113.0' font-size='12' fill='#1f2328' text-anchor='end'>plan</text>
+  <rect x='132.0' y='102.0' width='107.6' height='14' rx='3' fill='#7c8591' fill-opacity='1'/>
+  <text x='244.6' y='113.0' font-size='11' fill='#59636e'>3.1s</text>
+  <text x='122' y='135.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t1</text>
+  <rect x='239.6' y='124.0' width='32.9' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='277.6' y='135.0' font-size='11' fill='#59636e'>1.0s</text>
+  <text x='122' y='157.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t1</text>
+  <rect x='272.6' y='146.0' width='115.1' height='14' rx='3' fill='#2e9e6a' fill-opacity='0.18'/>
+  <rect x='387.7' y='146.0' width='53.1' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='445.8' y='157.0' font-size='11' fill='#59636e'>1.6s</text>
+  <text x='122' y='179.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t2</text>
+  <rect x='239.6' y='168.0' width='32.9' height='14' rx='3' fill='#3b7dd8' fill-opacity='0.18'/>
+  <rect x='272.6' y='168.0' width='35.9' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='313.5' y='179.0' font-size='11' fill='#59636e'>1.0s</text>
+  <text x='122' y='201.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t2</text>
+  <rect x='308.5' y='190.0' width='132.3' height='14' rx='3' fill='#2e9e6a' fill-opacity='0.18'/>
+  <rect x='440.8' y='190.0' width='53.1' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='498.9' y='201.0' font-size='11' fill='#59636e'>1.6s</text>
+  <text x='122' y='223.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t3</text>
+  <rect x='239.6' y='212.0' width='68.8' height='14' rx='3' fill='#3b7dd8' fill-opacity='0.18'/>
+  <rect x='308.5' y='212.0' width='45.9' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='359.4' y='223.0' font-size='11' fill='#59636e'>1.3s</text>
+  <text x='122' y='245.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t3</text>
+  <rect x='354.4' y='234.0' width='139.5' height='14' rx='3' fill='#2e9e6a' fill-opacity='0.18'/>
+  <rect x='493.9' y='234.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='551.9' y='245.0' font-size='11' fill='#59636e'>1.6s</text>
+  <text x='122' y='267.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t4</text>
+  <rect x='239.6' y='256.0' width='114.7' height='14' rx='3' fill='#3b7dd8' fill-opacity='0.18'/>
+  <rect x='354.4' y='256.0' width='33.4' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='392.7' y='267.0' font-size='11' fill='#59636e'>1.0s</text>
+  <text x='122' y='289.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t4</text>
+  <rect x='387.7' y='278.0' width='159.1' height='14' rx='3' fill='#2e9e6a' fill-opacity='0.18'/>
+  <rect x='546.8' y='278.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='604.9' y='289.0' font-size='11' fill='#59636e'>1.6s</text>
+  <text x='122' y='311.0' font-size='12' fill='#1f2328' text-anchor='end'>write</text>
+  <rect x='599.9' y='300.0' width='196.2' height='14' rx='3' fill='#e07b28' fill-opacity='1'/>
+  <text x='801.1' y='311.0' font-size='11' fill='#59636e'>5.7s</text>
+  <text x='24' y='366' font-size='14' font-weight='600' fill='#1f2328'>Parallel DAG (max_concurrency=4): 11.5s (41% faster)</text>
+  <line x1='132.0' y1='378' x2='132.0' y2='598' stroke='#d8dee4'/>
+  <text x='132.0' y='612' font-size='11' fill='#59636e' text-anchor='middle'>0s</text>
+  <line x1='303.0' y1='378' x2='303.0' y2='598' stroke='#d8dee4'/>
+  <text x='303.0' y='612' font-size='11' fill='#59636e' text-anchor='middle'>5s</text>
+  <line x1='474.0' y1='378' x2='474.0' y2='598' stroke='#d8dee4'/>
+  <text x='474.0' y='612' font-size='11' fill='#59636e' text-anchor='middle'>10s</text>
+  <line x1='645.0' y1='378' x2='645.0' y2='598' stroke='#d8dee4'/>
+  <text x='645.0' y='612' font-size='11' fill='#59636e' text-anchor='middle'>15s</text>
+  <line x1='816.0' y1='378' x2='816.0' y2='598' stroke='#d8dee4'/>
+  <text x='816.0' y='612' font-size='11' fill='#59636e' text-anchor='middle'>20s</text>
+  <text x='122' y='393.0' font-size='12' fill='#1f2328' text-anchor='end'>plan</text>
+  <rect x='132.0' y='382.0' width='107.7' height='14' rx='3' fill='#7c8591' fill-opacity='1'/>
+  <text x='244.7' y='393.0' font-size='11' fill='#59636e'>3.1s</text>
+  <text x='122' y='415.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t1</text>
+  <rect x='239.7' y='404.0' width='34.4' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='279.2' y='415.0' font-size='11' fill='#59636e'>1.0s</text>
+  <text x='122' y='437.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t1</text>
+  <rect x='274.2' y='426.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='332.2' y='437.0' font-size='11' fill='#59636e'>1.5s</text>
+  <text x='122' y='459.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t2</text>
+  <rect x='239.7' y='448.0' width='36.7' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='281.4' y='459.0' font-size='11' fill='#59636e'>1.1s</text>
+  <text x='122' y='481.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t2</text>
+  <rect x='276.4' y='470.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='334.4' y='481.0' font-size='11' fill='#59636e'>1.5s</text>
+  <text x='122' y='503.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t3</text>
+  <rect x='239.7' y='492.0' width='25.6' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='270.3' y='503.0' font-size='11' fill='#59636e'>0.7s</text>
+  <text x='122' y='525.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t3</text>
+  <rect x='265.4' y='514.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='323.4' y='525.0' font-size='11' fill='#59636e'>1.5s</text>
+  <text x='122' y='547.0' font-size='12' fill='#1f2328' text-anchor='end'>search:t4</text>
+  <rect x='239.7' y='536.0' width='34.5' height='14' rx='3' fill='#3b7dd8' fill-opacity='1'/>
+  <text x='279.3' y='547.0' font-size='11' fill='#59636e'>1.0s</text>
+  <text x='122' y='569.0' font-size='12' fill='#1f2328' text-anchor='end'>summarize:t4</text>
+  <rect x='274.3' y='558.0' width='53.0' height='14' rx='3' fill='#2e9e6a' fill-opacity='1'/>
+  <text x='332.3' y='569.0' font-size='11' fill='#59636e'>1.5s</text>
+  <text x='122' y='591.0' font-size='12' fill='#1f2328' text-anchor='end'>write</text>
+  <rect x='329.4' y='580.0' width='196.2' height='14' rx='3' fill='#e07b28' fill-opacity='1'/>
+  <text x='530.6' y='591.0' font-size='11' fill='#59636e'>5.7s</text>
+  <rect x='24' y='626' width='12' height='12' rx='2' fill='#7c8591'/>
+  <text x='42' y='636' font-size='12' fill='#1f2328'>plan</text>
+  <rect x='82' y='626' width='12' height='12' rx='2' fill='#3b7dd8'/>
+  <text x='100' y='636' font-size='12' fill='#1f2328'>search</text>
+  <rect x='154' y='626' width='12' height='12' rx='2' fill='#2e9e6a'/>
+  <text x='172' y='636' font-size='12' fill='#1f2328'>summarize</text>
+  <rect x='247' y='626' width='12' height='12' rx='2' fill='#e07b28'/>
+  <text x='265' y='636' font-size='12' fill='#1f2328'>write report</text>
+  <rect x='361' y='626' width='12' height='12' rx='2' fill='#3b7dd8' fill-opacity='0.18'/>
+  <text x='379' y='636' font-size='12' fill='#1f2328'>ready, waiting for a concurrency slot</text>
+</svg>
