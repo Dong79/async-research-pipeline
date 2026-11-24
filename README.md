@@ -16,8 +16,7 @@ by the source it cites.
 - **Unsupported claims 22.1% → 4.1%** (−80% relative, 95% CI 65–90%, n=30 queries, ~2,400 judged claims)
 - **Uncited factual claims per report 8.9 → 0.5**; citation precision 87% → 93%
 
-Inspired by the TODO-driven research agent in [hello-agents ch.14](https://github.com/datawhalechina/hello-agents/blob/main/docs/chapter14/%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0%20%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B7%B1%E5%BA%A6%E7%A0%94%E7%A9%B6%E6%99%BA%E8%83%BD%E4%BD%93.md),
-re-designed around concurrency, resilience and measurable grounding. No agent framework —
+Designed around concurrency, resilience and measurable grounding. No agent framework —
 just `asyncio`, FastAPI, httpx and Pydantic, so every mechanism is visible in ~3k lines.
 
 ```mermaid
